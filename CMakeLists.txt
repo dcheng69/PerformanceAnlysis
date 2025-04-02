@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(TestFileIO)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 # ccache support
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
@@ -23,6 +25,8 @@ include_directories(include)
 
 set(SOURCES
     common/file_utils.cpp
+    common/TrieNode.cpp
+    common/PathTrie.cpp
     main.cpp
 )
 

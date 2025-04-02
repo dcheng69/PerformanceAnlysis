@@ -2,6 +2,9 @@
 #include <fstream>
 #include <string>
 #include <unistd.h>
+#include <cstdlib>
+#include <limits.h>
+#include <cstring>
 #include "file_utils.h"
 
 #define TEST_ENTRIES_NUM        500
@@ -51,8 +54,17 @@ void TestRemoveDir() {
 
         CreateFilesAndLinks(szDirPath, 10, 5, 5);
 
-        if (!RemoveDir(szDirPath, false)) {
-            std::cerr << "Failed to remove directory: " << szDirPath << std::endl;
+        char absPath[PATH_MAX];
+        if (realpath(szDirPath.c_str(), absPath) == nullptr) {
+            std::cerr << "Failed to resolve absolute path for: " << szDirPath
+                      << ", err: " << strerror(errno) << std::endl;
+            continue;
+        }
+
+        std::string absoluteDirPath = absPath;
+
+        if (!RemoveDir(absoluteDirPath, false)) {
+            std::cerr << "Failed to remove directory: " << absoluteDirPath << std::endl;
         }
     }
 }

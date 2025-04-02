@@ -20,7 +20,7 @@ Use the following steps to record and analyze performance data:
 
 ```bash
 # Record performance data while running the executable
-perf record ./TestFileIO
+perf record -e cpu-clock -g ./TestFileIO
 
 # Convert recorded data to a human-readable format
 perf script -i perf.data > out.perf
@@ -36,7 +36,7 @@ To enable tracing, recompile the program with tracing enabled:
 
 ```bash
 # Enable trace support during compilation
-cmake -DENABLE_TRACE=ON
+cmake -DENABLE_TRACE=ON ..
 
 # Run the program with elevated privileges
 sudo ./TestFileIO
