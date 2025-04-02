@@ -99,7 +99,7 @@ bool RemoveDir(const std::string& szPath, bool bSaveParentPath);
 
 We will use `CreateDir` to create hundreds of folders, populate them with random files and symbolic links, and then remove them using `RemoveDir`. This will allow us to evaluate the performance of directory creation and deletion operations under different conditions.
 
-#### Solution1
+### Solution1
 
 ![FlameGraph-1](./res/FlameGraph-1.png)
 
@@ -114,6 +114,28 @@ The tracing details above show the function occurrences and average durations. I
 ![Massif-1](./res/Massif-1.png)
 
 The Massif visualization above displays memory consumption, providing detailed insights into the heap memory usage of each function. This information can be valuable when making trade-offs between time and space complexity optimizations.
+
+### Solution2
+
+In the `dev-optimize` branch, we implemented the interface using system calls instead of forking a subprocess. Now, let's review the results of the optimizations.
+
+![FlameGraph-2](./res/FlameGraph-2.png)
+
+Above flame graph shows that there is no extra shell sub process being created.
+
+![Tracing-3](./res/Tracing-3.png)
+
+Tracing result shows a 75% of average execution time(2.420ms - 0.498ms).
+
+![Massif-2](./res/Massif-2.png)
+
+Valgrind massif graph shows that the peak memory has surged to 113.3KB.
+
+## Conclusion
+
+In the optimization branch, we chose to use `TrieNode` to achieve better space complexity. While we could also store the entire path in the internal `queue` and `stack`, this would come with a trade-off in space complexity, as we would end up storing many duplicated path prefixes.
+
+In conclusion, with the tools introduced in this repo, we can perform a simple performance analysis and use that information to guide optimizations. There is no one-size-fits-all optimization solution; we must always evaluate based on the system's goals and available resources to determine the appropriate trade-offs.
 
 # References:
 
